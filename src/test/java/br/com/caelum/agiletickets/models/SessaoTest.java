@@ -4,6 +4,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class SessaoTest {
+	
+	@Test
+	public void deveVender1IngressoSeHa1Vaga(){
+		Sessao sessao = new Sessao();
+		sessao.setTotalIngressos(2);
+		sessao.setIngressosReservados(1);
+				
+		Assert.assertTrue(sessao.podeReservar(1));
+	}
 
 	@Test
 	public void deveVender1ingressoSeHa2vagas() throws Exception {
