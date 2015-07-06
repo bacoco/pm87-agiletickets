@@ -16,7 +16,8 @@ public class CalculadoraDePrecos {
 			//quando estiver acabando os ingressos... 
 			boolean ultimosIngressos = ingressosRestantes / sessao.getTotalIngressos().doubleValue() <= 0.05;
 			if(ultimosIngressos) { 
-				preco = multiplicaValorDoIngresso(sessao, 0.10);
+				preco = sessao.addPreco(sessao.getPreco().multiply(BigDecimal.valueOf(0.10)));
+//				preco = multiplicaValorDoIngresso(sessao, 0.10);
 			} else {
 				preco = sessao.getPreco();
 			}
@@ -24,7 +25,7 @@ public class CalculadoraDePrecos {
 			boolean ultimosIngressos = ingressosRestantes / sessao.getTotalIngressos().doubleValue() <= 0.50;
 			if(sessao.getEspetaculo().getTipo().equals(TipoDeEspetaculo.BALLET)) {
 				if(ultimosIngressos) { 
-					preco = sessao.addPreco(sessao.getPreco().multiply(BigDecimal.valueOf(0.20)));
+					preco = multiplicaValorDoIngresso(sessao, 0.20);
 				} else {
 					preco = sessao.getPreco();
 				}
@@ -52,7 +53,7 @@ public class CalculadoraDePrecos {
 	}
 	
 	private static BigDecimal multiplicaValorDoIngresso(Sessao sessao,Double multiplicador){
-		return sessao.getPreco().multiply(BigDecimal.valueOf(multiplicador));
+		return sessao.addPreco(sessao.getPreco().multiply(BigDecimal.valueOf(multiplicador)));
 	}
 
 }
