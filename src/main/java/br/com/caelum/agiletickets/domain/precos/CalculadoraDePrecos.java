@@ -8,52 +8,15 @@ import br.com.caelum.agiletickets.models.TipoDeEspetaculo;
 public class CalculadoraDePrecos {
 	
 	public static BigDecimal calcula(Sessao sessao, Integer quantidade) {
-		BigDecimal preco;
+		TipoDeEspetaculo tipoDeEspetaculo = sessao.getEspetaculo().getTipo();
 		
-		int ingressosRestantes = sessao.getTotalIngressos() - sessao.getIngressosReservados();
-		boolean cinemaOuShow = sessao.tipoEspetaculo(TipoDeEspetaculo.CINEMA) || sessao.tipoEspetaculo(TipoDeEspetaculo.SHOW);
-		if(cinemaOuShow) {
-			//quando estiver acabando os ingressos... 
-			boolean ultimosIngressos = ingressosRestantes / sessao.getTotalIngressos().doubleValue() <= 0.05;
-			if(ultimosIngressos) { 
-				preco = sessao.addPreco(sessao.getPreco().multiply(BigDecimal.valueOf(0.10)));
-//				preco = multiplicaValorDoIngresso(sessao, 0.10);
-			} else {
-				preco = sessao.getPreco();
-			}
-		} else {
-			boolean ultimosIngressos = ingressosRestantes / sessao.getTotalIngressos().doubleValue() <= 0.50;
-			if(sessao.getEspetaculo().getTipo().equals(TipoDeEspetaculo.BALLET)) {
-				if(ultimosIngressos) { 
-					preco = multiplicaValorDoIngresso(sessao, 0.20);
-				} else {
-					preco = sessao.getPreco();
-				}
-				
-				if(sessao.getDuracaoEmMinutos() > 60){
-					preco = multiplicaValorDoIngresso(sessao, 0.10);
-				}
-			} else if(sessao.tipoEspetaculo(TipoDeEspetaculo.ORQUESTRA)) {
-				if(ultimosIngressos) { 
-					preco = multiplicaValorDoIngresso(sessao,0.20);
-				} else {
-					preco = sessao.getPreco();
-				}
-
-				if(sessao.getDuracaoEmMinutos() > 60){
-					preco = multiplicaValorDoIngresso(sessao, 0.10);
-				}
-			}  else {
-				//nao aplica aumento para teatro (quem vai é pobretão)
-				preco = sessao.getPreco();
-			}
-		} 
-
-		return preco.multiply(BigDecimal.valueOf(quantidade));
+		CalculoDeAcrescimo calculoDeAcrescimo = tipoDeEspetaculo.getCalculoAcrescimo();
+ 
+		BigDecimal precoUnitario = calculoDeAcrescimo.aplica(sessao);
+		
+		BigDecimal precoTotal = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+		
+		return precoTotal;
 	}
-	
-	private static BigDecimal multiplicaValorDoIngresso(Sessao sessao,Double multiplicador){
-		return sessao.addPreco(sessao.getPreco().multiply(BigDecimal.valueOf(multiplicador)));
-	}
-
+ 
 }

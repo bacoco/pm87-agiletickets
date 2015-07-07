@@ -117,17 +117,16 @@ public class Sessao {
 		this.preco = preco;
 	}
 	
-	public BigDecimal addPreco(BigDecimal valor){
-		this.getPreco().add(valor);
-		return this.getPreco();
-	}
-	
 	public BigDecimal getPreco() {
 		return preco;
 	}
 	
-	public boolean tipoEspetaculo(TipoDeEspetaculo tipo){
-		return this.getEspetaculo().getTipo().equals(tipo);
+	public double porcentagemDeIngressosFaltando() {
+		return (getTotalIngressos() - getIngressosReservados()) / getTotalIngressos().doubleValue();
+	}
+ 
+	public BigDecimal precoComAcrescimo(BigDecimal acrescimo){
+		return preco.multiply(acrescimo);
 	}
 	
 }
